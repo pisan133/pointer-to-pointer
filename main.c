@@ -15,14 +15,6 @@ struct Node {
 // synonym for struct Node
 typedef struct Node Node;
 
-void print(Node n) {
-  printf("Node: %d --> ", n.data);
-  if (n.nextPtr == NULL)
-    printf("NULL\n");
-  else
-    printf("%d", n.nextPtr->data);
-}
-
 // data types match what is passed exactly
 // int copied, Node copied and all its members copied,
 // Nodeptr (a memory address) copied
@@ -101,7 +93,9 @@ void passByPointerChangeToNewNode(int *anIntPtr, Node **aNodePtrPtr) {
   // Say "another" is at memory location 0xFF01
   // OxFB2 now has the value 0xFF01
   *aNodePtrPtr = another;
-  // Now we nolonger have any way of getting to the old node
+  printf("\nanother node at address %p has been created\n", another);
+  printf("NodePtrPtr now has value %p, pointing to that address\n\n", *aNodePtrPtr);
+  // Now we no longer have any way of getting to the old node
   // we created a memory leak
 }
 
@@ -113,23 +107,25 @@ void testPassByPointer() {
 
   printf("Before passByPointerChangeDataValue\n");
   printf("Int is %d, memory address %p\n", i, &i);
-  printf("NodePtr has data %d, memory address of NodePtr %p\n\n",
-         nptr->data, &nptr);
+  printf("NodePtr has data %d, pointing to a node at %p\n\n",
+         nptr->data, nptr);
 
+  // passing address of int and adress of Node*
   passByPointerChangeDataValue(&i, &nptr);
 
   printf("\nAfter passByPointerChangeDataValue, before passByPointerChangeToNewNode\n");
   printf("Int is %d, memory address %p\n", i, &i);
-  printf("NodePtr has data %d, memory address of NodePtr %p\n\n",
-         nptr->data, &nptr);
+  printf("NodePtr has data %d, pointing to a node at %p\n\n",
+         nptr->data, nptr);
 
-  passByPointerChangeDataValue(&i, &nptr);
+  // passing address of int and adress of Node*
+  passByPointerChangeToNewNode(&i, &nptr);
 
   printf("\nAfter passByPointerChangeToNewNode\n");
   printf("Int is %d, memory address %p\n", i, &i);
-  printf("NodePtr has data %d, memory address of NodePtr %p\n",
-         nptr->data, &nptr);
-  printf("NodePtr is pointing to a totally new node, not just new data!!!\n");
+  printf("NodePtr has data %d, pointing to a node at %p\n\n",
+         nptr->data, nptr);
+  printf("NodePtr is pointing to a totally new node, not just new data!!!\n\n");
 
 }
 
@@ -144,45 +140,53 @@ int main() {
 /**
 Output:
 
+/Users/pisan/bitbucket/github/pisan133/pointer-to-pointer/cmake-build-debug/pointer_to_pointer
 Before passByValue
-Int is 10, memory address 0x7fff51b139fc
-Node has data 100, memory address of Node 0x7fff51b139e0
-NodePtr has data 1000, memory address of NodePtr 0x7fff51b139d8
+Int is 10, memory address 0x7fff5165d9fc
+Node has data 100, memory address of Node 0x7fff5165d9e0
+NodePtr has data 1000, memory address of NodePtr 0x7fff5165d9d8
 
 Inside passByValue
-Int is 10, memory address 0x7fff51b139bc
-Node has data 100, memory address of Node 0x7fff51b139a0
-NodePtr has data 1000, memory address of NodePtr 0x7fff51b139b0
+Int is 10, memory address 0x7fff5165d9bc
+Node has data 100, memory address of Node 0x7fff5165d9a0
+NodePtr has data 1000, memory address of NodePtr 0x7fff5165d9b0
 
 After passByValue
-Int is 10, memory address 0x7fff51b139fc
-Node has data 100, memory address of Node 0x7fff51b139e0
-NodePtr has data 2000, memory address of NodePtr 0x7fff51b139d8
+Int is 10, memory address 0x7fff5165d9fc
+Node has data 100, memory address of Node 0x7fff5165d9e0
+NodePtr has data 2000, memory address of NodePtr 0x7fff5165d9d8
 
 ===================
 Before passByPointerChangeDataValue
-Int is 10, memory address 0x7fff51b139fc
-NodePtr has data 1000, memory address of NodePtr 0x7fff51b139f0
+Int is 10, memory address 0x7fff5165d9fc
+NodePtr has data 1000, pointing to a node at 0x7fbc0cc026a0
 
 Inside passByPointerChangeDataValue
-Int pointer points to 10 which is stored at address 0x7fff51b139fc
-NodePtrPtr has value 0x7fb4f44026a0, it is pointing to that address
+Int pointer points to 10 which is stored at address 0x7fff5165d9fc
+NodePtrPtr has value 0x7fbc0cc026a0, it is pointing to that address
 That memory address has the node with data 1000
 
 After passByPointerChangeDataValue, before passByPointerChangeToNewNode
-Int is 20, memory address 0x7fff51b139fc
-NodePtr has data 2000, memory address of NodePtr 0x7fff51b139f0
+Int is 20, memory address 0x7fff5165d9fc
+NodePtr has data 2000, pointing to a node at 0x7fbc0cc026a0
 
-Inside passByPointerChangeDataValue
-Int pointer points to 20 which is stored at address 0x7fff51b139fc
-NodePtrPtr has value 0x7fb4f44026a0, it is pointing to that address
+Inside passByPointerChangeToNewNode
+Int pointer points to 20 which is stored at address 0x7fff5165d9fc
+NodePtrPtr has value 0x7fbc0cc026a0, it is pointing to that address
 That memory address has the node with data 2000
 
+another node at address 0x7fbc0cd00000 has been created
+NodePtrPtr now has value 0x7fbc0cd00000, pointing to that address
+
+
 After passByPointerChangeToNewNode
-Int is 40, memory address 0x7fff51b139fc
-NodePtr has data 4000, memory address of NodePtr 0x7fff51b139f0
+Int is 40, memory address 0x7fff5165d9fc
+NodePtr has data 25, pointing to a node at 0x7fbc0cd00000
+
 NodePtr is pointing to a totally new node, not just new data!!!
+
 Done
 
 Process finished with exit code 0
+
 */
