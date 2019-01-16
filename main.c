@@ -18,6 +18,8 @@ typedef struct Node Node;
 // data types match what is passed exactly
 // int copied, Node copied and all its members copied,
 // Nodeptr (a memory address) copied
+// The Node pointer is passed by value, so copied
+// (The Node is passed by pointer, so values inside the node not copied)
 void passByValue(int anInt, Node aNode, Node *aNodePtr) {
   printf("Inside passByValue\n");
   printf("Int is %d, memory address %p\n", anInt, &anInt);
